@@ -7,6 +7,7 @@ import {
   CreateAccountOutput,
 } from './dtos/create-account.dto';
 import { LoginInput, LoginOutput } from './dtos/login.dto';
+import { UserProfileOutput } from './dtos/user-profile.dto';
 import { User } from './entities/user.entity';
 
 @Injectable()
@@ -70,6 +71,18 @@ export class UserService {
         ok: false,
         error: '로그인에 실패했습니다.',
       };
+    }
+  }
+
+  async findById(id: number): Promise<UserProfileOutput> {
+    try {
+      const user = await this.users.findOneOrFail({ id });
+      return {
+        ok: true,
+        user,
+      };
+    } catch (error) {
+      return { ok: false, error: 'User Not Found' };
     }
   }
 }

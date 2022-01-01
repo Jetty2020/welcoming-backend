@@ -1,9 +1,12 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { AuthUser } from 'src/auth/auth-user.decorator';
+import { Role } from 'src/auth/role.decorator';
 import {
   CreateAccountInput,
   CreateAccountOutput,
 } from './dtos/create-account.dto';
 import { LoginInput, LoginOutput } from './dtos/login.dto';
+import { User } from './entities/user.entity';
 import { UserService } from './users.service';
 
 @Resolver()
@@ -22,9 +25,9 @@ export class UserResolver {
     return this.usersService.login(loginInput);
   }
 
-  // TODO: me 쿼리 생성 후 삭제
-  @Query(() => Boolean)
-  user(): Boolean {
-    return true;
+  @Query(() => User)
+  @Role(['Any'])
+  me(@AuthUser() authUser: User) {
+    return authUser;
   }
 }
