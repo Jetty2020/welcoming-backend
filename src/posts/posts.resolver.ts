@@ -1,5 +1,6 @@
 import {
   Args,
+  Context,
   Mutation,
   Parent,
   Query,
@@ -62,8 +63,13 @@ export class PostResolver {
   }
 
   @ResolveField(() => Number)
-  async scrapsNum(@Parent() post: Post) {
+  scrapsNum(@Parent() post: Post) {
     return this.postService.getScrapsNumber(post);
+  }
+
+  @ResolveField(() => Boolean)
+  isScrap(@Context() ctx: any, @Parent() post: Post) {
+    return this.postService.checkIScrap(ctx, post);
   }
 }
 

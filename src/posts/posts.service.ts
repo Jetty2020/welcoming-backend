@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CONFIG_PAGES } from 'src/common/common.constants';
+import { JwtService } from 'src/jwt/jwt.service';
 import { User } from 'src/users/entities/user.entity';
 import { ILike, MoreThanOrEqual, Repository } from 'typeorm';
 import { CreatePostInput, CreatePostOutput } from './dtos/create-post.dto';
@@ -25,6 +26,7 @@ export class PostService {
     private readonly scraps: Repository<Scrap>,
     @InjectRepository(Cart)
     private readonly carts: Repository<Cart>,
+    private readonly jwtService: JwtService,
   ) {}
 
   async createPost(
@@ -154,6 +156,26 @@ export class PostService {
         },
       });
       return totalScraps;
+    } catch (err) {
+      console.error(err);
+      throw err;
+    }
+  }
+
+  async checkIScrap(ctx: any, post: Post) {
+    try {
+      let decoded;
+      if (!ctx.token) return false;
+      else decoded = this.jwtService.verify(ctx.token.toString());
+      const exist = await this.scraps.find({
+        where: {
+          post,
+          user: {
+            id: decoded?.id,
+          },
+        },
+      });
+      return Boolean(exist.length);
     } catch (err) {
       console.error(err);
       throw err;
