@@ -10,13 +10,17 @@ import {
   SearchPostByCategoryInput,
   SearchPostByCategoryOutput,
 } from './dtos/search-post-category.dto';
+import { ToggleScrapInput, ToggleScrapOutput } from './dtos/toggle-scrap.dto';
 import { Post } from './entities/post.entity';
+import { Scrap } from './entities/scrap.entity';
 
 @Injectable()
 export class PostService {
   constructor(
     @InjectRepository(Post)
     private readonly posts: Repository<Post>,
+    @InjectRepository(Scrap)
+    private readonly scraps: Repository<Scrap>,
   ) {}
 
   async createPost(
@@ -134,6 +138,40 @@ export class PostService {
       return {
         ok: false,
         error: '게시물을 삭제하는데 실패했습니다.',
+      };
+    }
+  }
+
+  async toggleScrap(
+    user: User,
+    toggleScrapInput: ToggleScrapInput,
+  ): Promise<ToggleScrapOutput> {
+    try {
+      const post = await this.posts.findOne(toggleScrapInput.postId);
+      if (!post) {
+        return {
+          ok: false,
+          error: '게시물이 존재하지 않습니다.',
+        };
+      }
+      const scrap = await this.scraps.findOne({
+        where: {
+          user,
+          post,
+        },
+      });
+      if (scrap) {
+        await this.scraps.delete(scrap.id);
+      } else {
+        await this.scraps.save(this.scraps.create({ user, post }));
+      }
+      return {
+        ok: true,
+      };
+    } catch {
+      return {
+        ok: false,
+        error: 'Toggle scrap에 실패했습니다.',
       };
     }
   }

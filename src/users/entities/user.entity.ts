@@ -10,6 +10,7 @@ import { CoreEntity } from 'src/common/entities/core.entity';
 import { IsEmail, IsEnum, IsString, Length } from 'class-validator';
 import { InternalServerErrorException } from '@nestjs/common';
 import { Post } from 'src/posts/entities/post.entity';
+import { Scrap } from 'src/posts/entities/scrap.entity';
 
 export enum UserRole {
   Client = 'Client',
@@ -52,6 +53,10 @@ export class User extends CoreEntity {
   @Field(() => [Post])
   @OneToMany(() => Post, (post) => post.seller)
   posts: Post[];
+
+  @Field(() => [Scrap])
+  @OneToMany(() => Scrap, (scrap) => scrap.post)
+  scraps: Scrap[];
 
   @BeforeInsert()
   @BeforeUpdate()

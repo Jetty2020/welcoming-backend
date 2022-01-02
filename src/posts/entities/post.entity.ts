@@ -2,7 +2,8 @@ import { Field, InputType, Int, ObjectType } from '@nestjs/graphql';
 import { IsInt, IsString, Length } from 'class-validator';
 import { CoreEntity } from 'src/common/entities/core.entity';
 import { User } from 'src/users/entities/user.entity';
-import { Column, Entity, ManyToOne, RelationId } from 'typeorm';
+import { Column, Entity, ManyToOne, OneToMany, RelationId } from 'typeorm';
+import { Scrap } from './scrap.entity';
 
 @InputType('PostInputType', { isAbstract: true })
 @ObjectType()
@@ -77,4 +78,8 @@ export class Post extends CoreEntity {
 
   @RelationId((post: Post) => post.seller)
   sellerId: number;
+
+  @Field(() => [Scrap])
+  @OneToMany(() => Scrap, (scrap) => scrap.post)
+  scraps: Scrap[];
 }

@@ -9,7 +9,9 @@ import {
   SearchPostByCategoryInput,
   SearchPostByCategoryOutput,
 } from './dtos/search-post-category.dto';
+import { ToggleScrapInput, ToggleScrapOutput } from './dtos/toggle-scrap.dto';
 import { Post } from './entities/post.entity';
+import { Scrap } from './entities/scrap.entity';
 import { PostService } from './posts.service';
 
 @Resolver(() => Post)
@@ -48,5 +50,19 @@ export class PostResolver {
     @Args('input') deletePostInput: DeletePostInput,
   ): Promise<DeletePostOutput> {
     return this.postService.deletePost(seller, deletePostInput);
+  }
+}
+
+@Resolver(() => Scrap)
+export class ScrapResolver {
+  constructor(private readonly postService: PostService) {}
+
+  @Mutation(() => ToggleScrapOutput)
+  @Role(['Any'])
+  async toggleScrap(
+    @AuthUser() authUser: User,
+    @Args('input') toggleScrapInput: ToggleScrapInput,
+  ): Promise<ToggleScrapOutput> {
+    return this.postService.toggleScrap(authUser, toggleScrapInput);
   }
 }
