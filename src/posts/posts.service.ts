@@ -4,6 +4,7 @@ import { CONFIG_PAGES } from 'src/common/common.constants';
 import { User } from 'src/users/entities/user.entity';
 import { ILike, MoreThanOrEqual, Repository } from 'typeorm';
 import { CreatePostInput, CreatePostOutput } from './dtos/create-post.dto';
+import { DeletePostInput, DeletePostOutput } from './dtos/delete-post.dto';
 import { EditPostInput, EditPostOutput } from './dtos/edit-post.dto';
 import {
   SearchPostByCategoryInput,
@@ -103,6 +104,36 @@ export class PostService {
       return {
         ok: false,
         error: '게시물을 편집하는데 실패했습니다.',
+      };
+    }
+  }
+
+  async deletePost(
+    seller: User,
+    { postId }: DeletePostInput,
+  ): Promise<DeletePostOutput> {
+    try {
+      const post = await this.posts.findOne(postId);
+      if (!post) {
+        return {
+          ok: false,
+          error: '게시물이 존재하지 않습니다.',
+        };
+      }
+      if (seller.id !== post.sellerId) {
+        return {
+          ok: false,
+          error: '게시물을 삭제할 권한이 없습니다.',
+        };
+      }
+      await this.posts.delete(postId);
+      return {
+        ok: true,
+      };
+    } catch {
+      return {
+        ok: false,
+        error: '게시물을 삭제하는데 실패했습니다.',
       };
     }
   }
