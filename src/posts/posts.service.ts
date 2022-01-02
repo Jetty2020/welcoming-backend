@@ -57,8 +57,10 @@ export class PostService {
         },
         skip: (page - 1) * CONFIG_PAGES,
         take: CONFIG_PAGES,
+        order: {
+          createdAt: 'DESC',
+        },
       });
-      console.log(posts, detail_00 || 123);
       return {
         ok: true,
         posts,
