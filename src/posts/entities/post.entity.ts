@@ -84,6 +84,10 @@ export class Post extends CoreEntity {
   @OneToMany(() => Scrap, (scrap) => scrap.post)
   scraps: Scrap[];
 
+  @Field(() => Int)
+  @IsInt()
+  scrapsNum: number;
+
   @Field(() => [Cart])
   @OneToMany(() => Cart, (cart) => cart.post)
   carts: Cart[];

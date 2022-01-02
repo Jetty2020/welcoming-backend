@@ -146,6 +146,20 @@ export class PostService {
     }
   }
 
+  async getScrapsNumber(post: Post) {
+    try {
+      const [_, totalScraps] = await this.scraps.findAndCount({
+        where: {
+          post,
+        },
+      });
+      return totalScraps;
+    } catch (err) {
+      console.error(err);
+      throw err;
+    }
+  }
+
   async toggleScrap(
     user: User,
     toggleScrapInput: ToggleScrapInput,

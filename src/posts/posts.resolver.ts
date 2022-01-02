@@ -1,4 +1,11 @@
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import {
+  Args,
+  Mutation,
+  Parent,
+  Query,
+  ResolveField,
+  Resolver,
+} from '@nestjs/graphql';
 import { AuthUser } from 'src/auth/auth-user.decorator';
 import { Role } from 'src/auth/role.decorator';
 import { User } from 'src/users/entities/user.entity';
@@ -52,6 +59,11 @@ export class PostResolver {
     @Args('input') deletePostInput: DeletePostInput,
   ): Promise<DeletePostOutput> {
     return this.postService.deletePost(seller, deletePostInput);
+  }
+
+  @ResolveField(() => Number)
+  async scrapsNum(@Parent() post: Post) {
+    return this.postService.getScrapsNumber(post);
   }
 }
 
