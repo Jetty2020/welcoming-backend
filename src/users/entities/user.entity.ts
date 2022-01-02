@@ -4,11 +4,12 @@ import {
   ObjectType,
   registerEnumType,
 } from '@nestjs/graphql';
-import { BeforeInsert, BeforeUpdate, Column, Entity } from 'typeorm';
+import { BeforeInsert, BeforeUpdate, Column, Entity, OneToMany } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { CoreEntity } from 'src/common/entities/core.entity';
 import { IsEmail, IsEnum, IsString, Length } from 'class-validator';
 import { InternalServerErrorException } from '@nestjs/common';
+import { Post } from 'src/posts/entities/post.entity';
 
 export enum UserRole {
   Client = 'Client',
@@ -47,6 +48,10 @@ export class User extends CoreEntity {
   @Field(() => UserRole)
   @IsEnum(UserRole)
   role: UserRole;
+
+  @Field(() => [Post])
+  @OneToMany(() => Post, (post) => post.seller)
+  posts: Post[];
 
   @BeforeInsert()
   @BeforeUpdate()

@@ -8,6 +8,8 @@ import { User } from './users/entities/user.entity';
 import { JwtModule } from './jwt/jwt.module';
 import { AuthModule } from './auth/auth.module';
 import { TOKEN_KEY } from './common/common.constants';
+import { PostsModule } from './posts/posts.module';
+import { Post } from './posts/entities/post.entity';
 
 @Module({
   imports: [
@@ -34,7 +36,7 @@ import { TOKEN_KEY } from './common/common.constants';
       database: process.env.DB_NAME,
       synchronize: process.env.NODE_ENV !== 'prod',
       logging: process.env.NODE_ENV !== 'prod',
-      entities: [User],
+      entities: [User, Post],
     }),
     GraphQLModule.forRoot({
       autoSchemaFile: true,
@@ -45,6 +47,7 @@ import { TOKEN_KEY } from './common/common.constants';
     }),
     AuthModule,
     UsersModule,
+    PostsModule,
   ],
   controllers: [],
   providers: [],
