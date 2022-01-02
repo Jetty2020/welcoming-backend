@@ -4,6 +4,7 @@ import { CONFIG_PAGES } from 'src/common/common.constants';
 import { User } from 'src/users/entities/user.entity';
 import { ILike, MoreThanOrEqual, Repository } from 'typeorm';
 import { CreatePostInput, CreatePostOutput } from './dtos/create-post.dto';
+import { EditPostInput, EditPostOutput } from './dtos/edit-post.dto';
 import {
   SearchPostByCategoryInput,
   SearchPostByCategoryOutput,
@@ -66,6 +67,41 @@ export class PostService {
       };
     } catch {
       return { ok: false, error: '게시물을 검색하는데 실패했습니다.' };
+    }
+  }
+
+  async editPost(
+    writer: User,
+    editPostInput: EditPostInput,
+  ): Promise<EditPostOutput> {
+    try {
+      const post = await this.posts.findOne(editPostInput.postId);
+      if (!post) {
+        return {
+          ok: false,
+          error: '게시물이 존재하지 않습니다.',
+        };
+      }
+      if (writer.id !== post.sellerId) {
+        return {
+          ok: false,
+          error: '게시물을 편집할 권한이 없습니다.',
+        };
+      }
+      await this.posts.save([
+        {
+          id: editPostInput.postId,
+          ...editPostInput,
+        },
+      ]);
+      return {
+        ok: true,
+      };
+    } catch {
+      return {
+        ok: false,
+        error: '게시물을 편집하는데 실패했습니다.',
+      };
     }
   }
 }

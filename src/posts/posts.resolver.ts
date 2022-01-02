@@ -3,6 +3,7 @@ import { AuthUser } from 'src/auth/auth-user.decorator';
 import { Role } from 'src/auth/role.decorator';
 import { User } from 'src/users/entities/user.entity';
 import { CreatePostInput, CreatePostOutput } from './dtos/create-post.dto';
+import { EditPostInput, EditPostOutput } from './dtos/edit-post.dto';
 import {
   SearchPostByCategoryInput,
   SearchPostByCategoryOutput,
@@ -28,5 +29,14 @@ export class PostResolver {
     @Args('input') searchPostInput: SearchPostByCategoryInput,
   ): Promise<SearchPostByCategoryOutput> {
     return this.postService.searchPostByCategory(searchPostInput);
+  }
+
+  @Mutation(() => EditPostOutput)
+  @Role(['Any'])
+  editPost(
+    @AuthUser() owner: User,
+    @Args('input') editPostInput: EditPostInput,
+  ): Promise<EditPostOutput> {
+    return this.postService.editPost(owner, editPostInput);
   }
 }
