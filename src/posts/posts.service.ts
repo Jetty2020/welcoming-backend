@@ -73,7 +73,7 @@ export class PostService {
   }
 
   async editPost(
-    writer: User,
+    seller: User,
     editPostInput: EditPostInput,
   ): Promise<EditPostOutput> {
     try {
@@ -84,7 +84,7 @@ export class PostService {
           error: '게시물이 존재하지 않습니다.',
         };
       }
-      if (writer.id !== post.sellerId) {
+      if (seller.id !== post.sellerId) {
         return {
           ok: false,
           error: '게시물을 편집할 권한이 없습니다.',

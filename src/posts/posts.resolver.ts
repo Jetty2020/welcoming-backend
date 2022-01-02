@@ -34,9 +34,9 @@ export class PostResolver {
   @Mutation(() => EditPostOutput)
   @Role(['Any'])
   editPost(
-    @AuthUser() owner: User,
+    @AuthUser() seller: User,
     @Args('input') editPostInput: EditPostInput,
   ): Promise<EditPostOutput> {
-    return this.postService.editPost(owner, editPostInput);
+    return this.postService.editPost(seller, editPostInput);
   }
 }
