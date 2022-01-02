@@ -9,7 +9,9 @@ import {
   SearchPostByCategoryInput,
   SearchPostByCategoryOutput,
 } from './dtos/search-post-category.dto';
+import { ToggleCartInput, ToggleCartOutput } from './dtos/toggle-cart.dto';
 import { ToggleScrapInput, ToggleScrapOutput } from './dtos/toggle-scrap.dto';
+import { Cart } from './entities/cart.entity';
 import { Post } from './entities/post.entity';
 import { Scrap } from './entities/scrap.entity';
 import { PostService } from './posts.service';
@@ -64,5 +66,19 @@ export class ScrapResolver {
     @Args('input') toggleScrapInput: ToggleScrapInput,
   ): Promise<ToggleScrapOutput> {
     return this.postService.toggleScrap(authUser, toggleScrapInput);
+  }
+}
+
+@Resolver(() => Cart)
+export class CartResolver {
+  constructor(private readonly postService: PostService) {}
+
+  @Mutation(() => ToggleCartOutput)
+  @Role(['Any'])
+  async toggleCart(
+    @AuthUser() authUser: User,
+    @Args('input') toggleCartInput: ToggleCartInput,
+  ): Promise<ToggleCartOutput> {
+    return this.postService.toggleCart(authUser, toggleCartInput);
   }
 }
