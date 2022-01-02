@@ -17,7 +17,10 @@ export class CreatePostInput extends PickType(PartialType(Post), [
   'stock',
   'brand',
   'category',
-  'detail',
+  'detail_00',
+  'detail_01',
+  'detail_02',
+  'detail_03',
   'thumbnail',
   'desc',
 ]) {}

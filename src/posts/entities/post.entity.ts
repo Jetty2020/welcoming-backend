@@ -39,10 +39,25 @@ export class Post extends CoreEntity {
   @IsString()
   category: string;
 
-  @Field(() => String)
-  @Column()
-  @IsString()
-  detail: string;
+  @Field(() => Int, { nullable: true })
+  @Column({ nullable: true })
+  @IsInt()
+  detail_00: number;
+
+  @Field(() => Int, { nullable: true })
+  @Column({ nullable: true })
+  @IsInt()
+  detail_01: number;
+
+  @Field(() => Int, { nullable: true })
+  @Column({ nullable: true })
+  @IsInt()
+  detail_02: number;
+
+  @Field(() => Int, { nullable: true })
+  @Column({ nullable: true })
+  @IsInt()
+  detail_03: number;
 
   @Field(() => String)
   @Column()

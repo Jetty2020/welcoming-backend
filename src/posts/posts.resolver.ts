@@ -1,8 +1,12 @@
-import { Args, Mutation, Resolver } from '@nestjs/graphql';
+import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { AuthUser } from 'src/auth/auth-user.decorator';
 import { Role } from 'src/auth/role.decorator';
 import { User } from 'src/users/entities/user.entity';
 import { CreatePostInput, CreatePostOutput } from './dtos/create-post.dto';
+import {
+  SearchPostByCategoryInput,
+  SearchPostByCategoryOutput,
+} from './dtos/search-post-category.dto';
 import { Post } from './entities/post.entity';
 import { PostService } from './posts.service';
 
@@ -17,5 +21,12 @@ export class PostResolver {
     @Args('input') createPostInput: CreatePostInput,
   ): Promise<CreatePostOutput> {
     return this.postService.createPost(authUser, createPostInput);
+  }
+
+  @Query(() => SearchPostByCategoryOutput)
+  searchPostByCategory(
+    @Args('input') searchPostInput: SearchPostByCategoryInput,
+  ): Promise<SearchPostByCategoryOutput> {
+    return this.postService.searchPostByCategory(searchPostInput);
   }
 }
