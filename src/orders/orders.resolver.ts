@@ -3,6 +3,7 @@ import { AuthUser } from 'src/auth/auth-user.decorator';
 import { Role } from 'src/auth/role.decorator';
 import { User } from 'src/users/entities/user.entity';
 import { CreateCartInput, CreateCartOutput } from './dto/create-cart.dto';
+import { CreateOrderInput, CreateOrderOutput } from './dto/create-order.dto';
 import { DeleteCartInput, DeleteCartOutput } from './dto/delete-cart.dto';
 import { MyCartInput, MyCartOutput } from './dto/my-cart.dto';
 import { UpdateCartInput, UpdateCartOutput } from './dto/update-cart.dto';
@@ -10,7 +11,18 @@ import { Cart } from './entities/cart.entity';
 import { OrderService } from './orders.service';
 
 @Resolver()
-export class OrderResolver {}
+export class OrderResolver {
+  constructor(private readonly orderService: OrderService) {}
+
+  @Mutation(() => CreateOrderOutput)
+  @Role(['Any'])
+  async createOrder(
+    @AuthUser() user: User,
+    @Args('input') createOrderInput: CreateOrderInput,
+  ): Promise<CreateCartOutput> {
+    return this.orderService.createOrder(user, createOrderInput);
+  }
+}
 
 @Resolver(() => Cart)
 export class CartResolver {
@@ -20,9 +32,9 @@ export class CartResolver {
   @Role(['Any'])
   async createCart(
     @AuthUser() user: User,
-    @Args('input') toggleCartInput: CreateCartInput,
+    @Args('input') createCartInput: CreateCartInput,
   ): Promise<CreateCartOutput> {
-    return this.orderService.createCartItem(user, toggleCartInput);
+    return this.orderService.createCartItem(user, createCartInput);
   }
 
   @Query(() => MyCartOutput)

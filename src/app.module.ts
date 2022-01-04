@@ -13,6 +13,7 @@ import { Post } from './posts/entities/post.entity';
 import { Scrap } from './posts/entities/scrap.entity';
 import { OrdersModule } from './orders/orders.module';
 import { Cart } from './orders/entities/cart.entity';
+import { Order } from './orders/entities/order.entity';
 
 @Module({
   imports: [
@@ -39,7 +40,7 @@ import { Cart } from './orders/entities/cart.entity';
       database: process.env.DB_NAME,
       synchronize: process.env.NODE_ENV !== 'prod',
       logging: process.env.NODE_ENV !== 'prod',
-      entities: [User, Post, Scrap, Cart],
+      entities: [User, Post, Scrap, Cart, Order],
     }),
     GraphQLModule.forRoot({
       autoSchemaFile: true,

@@ -4,10 +4,12 @@ import { Post } from 'src/posts/entities/post.entity';
 import { User } from 'src/users/entities/user.entity';
 import { Repository } from 'typeorm';
 import { CreateCartInput, CreateCartOutput } from './dto/create-cart.dto';
+import { CreateOrderInput, CreateOrderOutput } from './dto/create-order.dto';
 import { DeleteCartInput, DeleteCartOutput } from './dto/delete-cart.dto';
 import { MyCartInput, MyCartOutput } from './dto/my-cart.dto';
 import { UpdateCartInput, UpdateCartOutput } from './dto/update-cart.dto';
 import { Cart } from './entities/cart.entity';
+import { Order } from './entities/order.entity';
 import { CART_CONFIG_PAGES } from './order.constants';
 
 @Injectable()
@@ -17,7 +19,42 @@ export class OrderService {
     private readonly posts: Repository<Post>,
     @InjectRepository(Cart)
     private readonly carts: Repository<Cart>,
+    @InjectRepository(Order)
+    private readonly orders: Repository<Order>,
   ) {}
+  async createOrder(
+    customer: User,
+    { cartIds, status, address }: CreateOrderInput,
+  ): Promise<CreateOrderOutput> {
+    try {
+      this.orders.create();
+      const newOrder = await this.orders.save(
+        this.orders.create({
+          user: customer,
+          address,
+        }),
+      );
+
+      for (const cartId of cartIds) {
+        const cart = await this.carts.findOne(cartId);
+
+        await this.carts.save({
+          id: cart.id,
+          order: newOrder,
+          status,
+        });
+      }
+      return {
+        ok: true,
+      };
+    } catch {
+      return {
+        ok: false,
+        error: '주문에 실패했습니다.',
+      };
+    }
+  }
+
   async createCartItem(
     user: User,
     createCartInput: CreateCartInput,
