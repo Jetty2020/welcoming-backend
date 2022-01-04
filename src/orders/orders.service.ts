@@ -7,8 +7,9 @@ import { CreateCartInput, CreateCartOutput } from './dto/create-cart.dto';
 import { CreateOrderInput, CreateOrderOutput } from './dto/create-order.dto';
 import { DeleteCartInput, DeleteCartOutput } from './dto/delete-cart.dto';
 import { MyCartInput, MyCartOutput } from './dto/my-cart.dto';
+import { OrdersNumOutput } from './dto/orders-num.dto';
 import { UpdateCartInput, UpdateCartOutput } from './dto/update-cart.dto';
-import { Cart } from './entities/cart.entity';
+import { Cart, OrderStatus } from './entities/cart.entity';
 import { Order } from './entities/order.entity';
 import { CART_CONFIG_PAGES } from './order.constants';
 
@@ -52,6 +53,28 @@ export class OrderService {
         ok: false,
         error: '주문에 실패했습니다.',
       };
+    }
+  }
+
+  async ordersNum(user: User): Promise<OrdersNumOutput> {
+    try {
+      const numArr = [];
+      for (const val of Object.values(OrderStatus)) {
+        if (val === OrderStatus.OnCart) continue;
+        const [_, nums] = await this.carts.findAndCount({
+          where: {
+            user,
+            status: val,
+          },
+        });
+        numArr.push(nums);
+      }
+      return {
+        ok: true,
+        numArr,
+      };
+    } catch {
+      return { ok: false, error: '장바구니를 검색하는데 실패했습니다.' };
     }
   }
 

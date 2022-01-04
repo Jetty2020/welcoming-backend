@@ -6,6 +6,7 @@ import { CreateCartInput, CreateCartOutput } from './dto/create-cart.dto';
 import { CreateOrderInput, CreateOrderOutput } from './dto/create-order.dto';
 import { DeleteCartInput, DeleteCartOutput } from './dto/delete-cart.dto';
 import { MyCartInput, MyCartOutput } from './dto/my-cart.dto';
+import { OrdersNumOutput } from './dto/orders-num.dto';
 import { UpdateCartInput, UpdateCartOutput } from './dto/update-cart.dto';
 import { Cart } from './entities/cart.entity';
 import { OrderService } from './orders.service';
@@ -21,6 +22,12 @@ export class OrderResolver {
     @Args('input') createOrderInput: CreateOrderInput,
   ): Promise<CreateCartOutput> {
     return this.orderService.createOrder(user, createOrderInput);
+  }
+
+  @Query(() => OrdersNumOutput)
+  @Role(['Any'])
+  async OrdersNum(@AuthUser() user: User): Promise<CreateCartOutput> {
+    return this.orderService.ordersNum(user);
   }
 }
 
