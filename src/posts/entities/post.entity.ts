@@ -6,6 +6,22 @@ import { Column, Entity, ManyToOne, OneToMany, RelationId } from 'typeorm';
 import { Cart } from './cart.entity';
 import { Scrap } from './scrap.entity';
 
+@InputType('PostChoiceInputType', { isAbstract: true })
+@ObjectType()
+export class PostChoice {
+  @Field(() => String)
+  name: string;
+  @Field(() => Int, { nullable: true })
+  extra?: number;
+}
+@InputType('PostOptionInputType', { isAbstract: true })
+@ObjectType()
+export class PostOption {
+  @Field(() => String)
+  name: string;
+  @Field(() => [PostChoice], { nullable: true })
+  choices?: PostChoice[];
+}
 @InputType('PostInputType', { isAbstract: true })
 @ObjectType()
 @Entity()
@@ -95,4 +111,8 @@ export class Post extends CoreEntity {
   @Field(() => [Cart])
   @OneToMany(() => Cart, (cart) => cart.post)
   carts: Cart[];
+
+  @Field(() => [PostOption], { nullable: true })
+  @Column({ type: 'json', nullable: true })
+  options?: PostOption[];
 }

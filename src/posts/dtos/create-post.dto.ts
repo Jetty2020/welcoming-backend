@@ -23,6 +23,7 @@ export class CreatePostInput extends PickType(PartialType(Post), [
   'detail_03',
   'thumbnail',
   'desc',
+  'options',
 ]) {}
 
 @ObjectType()
