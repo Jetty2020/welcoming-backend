@@ -12,6 +12,7 @@ import { PostsModule } from './posts/posts.module';
 import { Post } from './posts/entities/post.entity';
 import { Scrap } from './posts/entities/scrap.entity';
 import { Cart } from './posts/entities/cart.entity';
+import { OrdersModule } from './orders/orders.module';
 
 @Module({
   imports: [
@@ -50,6 +51,7 @@ import { Cart } from './posts/entities/cart.entity';
     AuthModule,
     UsersModule,
     PostsModule,
+    OrdersModule,
   ],
   controllers: [],
   providers: [],
