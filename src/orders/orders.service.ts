@@ -5,6 +5,7 @@ import { User } from 'src/users/entities/user.entity';
 import { Repository } from 'typeorm';
 import { CreateCartInput, CreateCartOutput } from './dto/create-cart.dto';
 import { MyCartInput, MyCartOutput } from './dto/my-cart.dto';
+import { UpdateCartInput, UpdateCartOutput } from './dto/update-cart.dto';
 import { Cart } from './entities/cart.entity';
 import { CART_CONFIG_PAGES } from './order.constants';
 
@@ -94,6 +95,36 @@ export class OrderService {
       };
     } catch {
       return { ok: false, error: '장바구니를 검색하는데 실패했습니다.' };
+    }
+  }
+  async updateCartItem(
+    customer: User,
+    { cartId, nthOption, num }: UpdateCartInput,
+  ): Promise<UpdateCartOutput> {
+    try {
+      const cart = await this.carts.findOne(cartId);
+      if (!cart) {
+        return {
+          ok: false,
+          error: '장부구니에 물품이 존재하지 않습니다.',
+        };
+      }
+      if (customer.id !== cart.customerId) {
+        return {
+          ok: false,
+          error: '장바구니를 편집할 권한이 없습니다.',
+        };
+      }
+      cart.options[nthOption].num = num;
+      await this.carts.save(cart);
+      return {
+        ok: true,
+      };
+    } catch {
+      return {
+        ok: false,
+        error: '장바구니를 편집하는데 실패했습니다.',
+      };
     }
   }
 }

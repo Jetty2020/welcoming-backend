@@ -2,7 +2,7 @@ import { Field, InputType, Int, ObjectType } from '@nestjs/graphql';
 import { CoreEntity } from 'src/common/entities/core.entity';
 import { Post } from 'src/posts/entities/post.entity';
 import { User } from 'src/users/entities/user.entity';
-import { Column, Entity, ManyToOne } from 'typeorm';
+import { Column, Entity, ManyToOne, RelationId } from 'typeorm';
 
 @InputType('CartChoiceInputType', { isAbstract: true })
 @ObjectType()
@@ -45,4 +45,7 @@ export class Cart extends CoreEntity {
   @Field(() => [CartItemOption], { nullable: true })
   @Column({ type: 'json', nullable: true })
   options?: CartItemOption[];
+
+  @RelationId((cart: Cart) => cart.user)
+  customerId: number;
 }
