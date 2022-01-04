@@ -3,6 +3,7 @@ import { AuthUser } from 'src/auth/auth-user.decorator';
 import { Role } from 'src/auth/role.decorator';
 import { User } from 'src/users/entities/user.entity';
 import { CreateCartInput, CreateCartOutput } from './dto/create-cart.dto';
+import { DeleteCartInput, DeleteCartOutput } from './dto/delete-cart.dto';
 import { MyCartInput, MyCartOutput } from './dto/my-cart.dto';
 import { UpdateCartInput, UpdateCartOutput } from './dto/update-cart.dto';
 import { Cart } from './entities/cart.entity';
@@ -40,5 +41,14 @@ export class CartResolver {
     @Args('input') updateCartInput: UpdateCartInput,
   ): Promise<UpdateCartOutput> {
     return this.orderService.updateCartItem(user, updateCartInput);
+  }
+
+  @Mutation(() => DeleteCartOutput)
+  @Role(['Any'])
+  async deleteCart(
+    @AuthUser() user: User,
+    @Args('input') deleteCartInput: DeleteCartInput,
+  ): Promise<DeleteCartOutput> {
+    return this.orderService.deleteCartItem(user, deleteCartInput);
   }
 }
