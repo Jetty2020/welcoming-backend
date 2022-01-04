@@ -18,5 +18,5 @@ export class Scrap extends CoreEntity {
   @ManyToOne(() => Post, (post) => post.scraps, {
     onDelete: 'CASCADE',
   })
-  post: User;
+  post: Post;
 }

@@ -11,7 +11,7 @@ import { IsEmail, IsEnum, IsString, Length } from 'class-validator';
 import { InternalServerErrorException } from '@nestjs/common';
 import { Post } from 'src/posts/entities/post.entity';
 import { Scrap } from 'src/posts/entities/scrap.entity';
-import { Cart } from 'src/posts/entities/cart.entity';
+import { Cart } from 'src/orders/entities/cart.entity';
 
 export enum UserRole {
   Client = 'Client',
@@ -60,7 +60,7 @@ export class User extends CoreEntity {
   scraps: Scrap[];
 
   @Field(() => [Cart])
-  @OneToMany(() => Scrap, (scrap) => scrap.post)
+  @OneToMany(() => Cart, (cart) => cart.user)
   carts: Cart[];
 
   @BeforeInsert()

@@ -11,9 +11,7 @@ import {
   SearchPostByCategoryInput,
   SearchPostByCategoryOutput,
 } from './dtos/search-post-category.dto';
-import { ToggleCartInput, ToggleCartOutput } from './dtos/toggle-cart.dto';
 import { ToggleScrapInput, ToggleScrapOutput } from './dtos/toggle-scrap.dto';
-import { Cart } from './entities/cart.entity';
 import { Post } from './entities/post.entity';
 import { Scrap } from './entities/scrap.entity';
 
@@ -24,8 +22,6 @@ export class PostService {
     private readonly posts: Repository<Post>,
     @InjectRepository(Scrap)
     private readonly scraps: Repository<Scrap>,
-    @InjectRepository(Cart)
-    private readonly carts: Repository<Cart>,
     private readonly jwtService: JwtService,
   ) {}
 
@@ -212,40 +208,6 @@ export class PostService {
       return {
         ok: false,
         error: 'Toggle scrap에 실패했습니다.',
-      };
-    }
-  }
-
-  async toggleCart(
-    user: User,
-    toggleCartInput: ToggleCartInput,
-  ): Promise<ToggleCartOutput> {
-    try {
-      const post = await this.posts.findOne(toggleCartInput.postId);
-      if (!post) {
-        return {
-          ok: false,
-          error: '게시물이 존재하지 않습니다.',
-        };
-      }
-      const cart = await this.carts.findOne({
-        where: {
-          user,
-          post,
-        },
-      });
-      if (cart) {
-        await this.carts.delete(cart.id);
-      } else {
-        await this.carts.save(this.carts.create({ user, post }));
-      }
-      return {
-        ok: true,
-      };
-    } catch {
-      return {
-        ok: false,
-        error: 'Toggle cart에 실패했습니다.',
       };
     }
   }

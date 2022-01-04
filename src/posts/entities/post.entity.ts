@@ -1,9 +1,9 @@
 import { Field, InputType, Int, ObjectType } from '@nestjs/graphql';
 import { IsBoolean, IsInt, IsString, Length } from 'class-validator';
 import { CoreEntity } from 'src/common/entities/core.entity';
+import { Cart } from 'src/orders/entities/cart.entity';
 import { User } from 'src/users/entities/user.entity';
 import { Column, Entity, ManyToOne, OneToMany, RelationId } from 'typeorm';
-import { Cart } from './cart.entity';
 import { Scrap } from './scrap.entity';
 
 @InputType('PostChoiceInputType', { isAbstract: true })
