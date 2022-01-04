@@ -115,18 +115,36 @@ export class OrderService {
     }
   }
 
-  async myCart(user: User, { page }: MyCartInput): Promise<MyCartOutput> {
+  async myCart(
+    user: User,
+    { page, status }: MyCartInput,
+  ): Promise<MyCartOutput> {
     try {
-      const cartItems = await this.carts.find({
-        where: {
-          user,
-        },
-        skip: (page - 1) * CART_CONFIG_PAGES,
-        take: CART_CONFIG_PAGES,
-        order: {
-          createdAt: 'DESC',
-        },
-      });
+      let cartItems;
+      if (status) {
+        cartItems = await this.carts.find({
+          where: {
+            user,
+            status,
+          },
+          skip: (page - 1) * CART_CONFIG_PAGES,
+          take: CART_CONFIG_PAGES,
+          order: {
+            createdAt: 'DESC',
+          },
+        });
+      } else {
+        cartItems = await this.carts.find({
+          where: {
+            user,
+          },
+          skip: (page - 1) * CART_CONFIG_PAGES,
+          take: CART_CONFIG_PAGES,
+          order: {
+            createdAt: 'DESC',
+          },
+        });
+      }
       return {
         ok: true,
         carts: cartItems,
