@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { JwtService } from 'src/jwt/jwt.service';
+import { Cart } from 'src/orders/entities/cart.entity';
 import { Repository } from 'typeorm';
 import {
   CreateAccountInput,
@@ -14,7 +15,12 @@ import { User } from './entities/user.entity';
 @Injectable()
 export class UserService {
   constructor(
-    @InjectRepository(User) private readonly users: Repository<User>,
+    @InjectRepository(User)
+    private readonly users: Repository<User>,
+
+    @InjectRepository(Cart)
+    private readonly carts: Repository<Cart>,
+
     private readonly jwtService: JwtService,
   ) {}
 
@@ -102,6 +108,21 @@ export class UserService {
       };
     } catch (error) {
       return { ok: false, error: '프로필 수정에 실패했습니다.' };
+    }
+  }
+
+  async getCartsNumber(user: User) {
+    try {
+      const [_, totalCarts] = await this.carts.findAndCount({
+        where: {
+          user,
+          status: 'OnCart',
+        },
+      });
+      return totalCarts;
+    } catch (err) {
+      console.error(err);
+      throw err;
     }
   }
 }

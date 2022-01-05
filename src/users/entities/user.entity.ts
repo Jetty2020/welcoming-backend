@@ -1,13 +1,14 @@
 import {
   Field,
   InputType,
+  Int,
   ObjectType,
   registerEnumType,
 } from '@nestjs/graphql';
 import { BeforeInsert, BeforeUpdate, Column, Entity, OneToMany } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { CoreEntity } from 'src/common/entities/core.entity';
-import { IsEmail, IsEnum, IsString, Length } from 'class-validator';
+import { IsEmail, IsEnum, IsInt, IsString, Length } from 'class-validator';
 import { InternalServerErrorException } from '@nestjs/common';
 import { Post } from 'src/posts/entities/post.entity';
 import { Scrap } from 'src/posts/entities/scrap.entity';
@@ -62,6 +63,10 @@ export class User extends CoreEntity {
   @Field(() => [Cart])
   @OneToMany(() => Cart, (cart) => cart.user)
   carts: Cart[];
+
+  @Field(() => Int)
+  @IsInt()
+  cartsNum: number;
 
   @BeforeInsert()
   @BeforeUpdate()
