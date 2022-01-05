@@ -87,6 +87,11 @@ export class Post extends CoreEntity {
   @IsString()
   thumbnail: string;
 
+  @Field(() => Int)
+  @Column({ default: 0 })
+  @IsInt()
+  event: number;
+
   @Field(() => User)
   @ManyToOne(() => User, (user) => user.posts, {
     onDelete: 'CASCADE',
