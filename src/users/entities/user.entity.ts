@@ -13,6 +13,7 @@ import { InternalServerErrorException } from '@nestjs/common';
 import { Post } from 'src/posts/entities/post.entity';
 import { Scrap } from 'src/posts/entities/scrap.entity';
 import { Cart } from 'src/orders/entities/cart.entity';
+import { Comment } from 'src/posts/entities/comment.entity';
 
 export enum UserRole {
   Client = 'Client',
@@ -67,6 +68,14 @@ export class User extends CoreEntity {
   @Field(() => Int)
   @IsInt()
   cartsNum: number;
+
+  @Field(() => [Comment])
+  @OneToMany(() => Comment, (comment) => comment.user, {
+    nullable: true,
+    onDelete: 'SET NULL',
+    eager: true,
+  })
+  comments: Comment[];
 
   @BeforeInsert()
   @BeforeUpdate()

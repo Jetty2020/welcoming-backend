@@ -15,6 +15,8 @@ import { OrdersModule } from './orders/orders.module';
 import { Cart } from './orders/entities/cart.entity';
 import { Order } from './orders/entities/order.entity';
 import { UploadsModule } from './upload/uploads.module';
+import { Comment } from './posts/entities/comment.entity';
+import { Nested } from './posts/entities/nested.entity';
 
 @Module({
   imports: [
@@ -43,7 +45,7 @@ import { UploadsModule } from './upload/uploads.module';
       database: process.env.DB_NAME,
       synchronize: process.env.NODE_ENV !== 'prod',
       logging: process.env.NODE_ENV !== 'prod',
-      entities: [User, Post, Scrap, Cart, Order],
+      entities: [User, Post, Scrap, Cart, Order, Comment, Nested],
     }),
     GraphQLModule.forRoot({
       autoSchemaFile: true,

@@ -4,6 +4,7 @@ import { CoreEntity } from 'src/common/entities/core.entity';
 import { Cart } from 'src/orders/entities/cart.entity';
 import { User } from 'src/users/entities/user.entity';
 import { Column, Entity, ManyToOne, OneToMany, RelationId } from 'typeorm';
+import { Comment } from './comment.entity';
 import { Scrap } from './scrap.entity';
 
 @InputType('PostChoiceInputType', { isAbstract: true })
@@ -120,4 +121,12 @@ export class Post extends CoreEntity {
   @Field(() => [PostOption], { nullable: true })
   @Column({ type: 'json', nullable: true })
   options?: PostOption[];
+
+  @Field(() => [Comment])
+  @OneToMany(() => Comment, (comment) => comment.post, {
+    nullable: true,
+    onDelete: 'SET NULL',
+    eager: true,
+  })
+  comments: Comment[];
 }
