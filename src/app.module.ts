@@ -14,6 +14,7 @@ import { Scrap } from './posts/entities/scrap.entity';
 import { OrdersModule } from './orders/orders.module';
 import { Cart } from './orders/entities/cart.entity';
 import { Order } from './orders/entities/order.entity';
+import { UploadsModule } from './upload/uploads.module';
 
 @Module({
   imports: [
@@ -29,6 +30,8 @@ import { Order } from './orders/entities/order.entity';
         DB_PASSWORD: Joi.string().required(),
         DB_NAME: Joi.string().required(),
         PRIVATE_KEY: Joi.string().required(),
+        AWS_KEY: Joi.string().required(),
+        AWS_SECRET: Joi.string().required(),
       }),
     }),
     TypeOrmModule.forRoot({
@@ -53,6 +56,7 @@ import { Order } from './orders/entities/order.entity';
     UsersModule,
     PostsModule,
     OrdersModule,
+    UploadsModule,
   ],
   controllers: [],
   providers: [],
