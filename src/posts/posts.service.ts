@@ -19,6 +19,7 @@ import {
 } from './dtos/delete-comment.dto';
 import { DeletePostInput, DeletePostOutput } from './dtos/delete-post.dto';
 import { EditPostInput, EditPostOutput } from './dtos/edit-post.dto';
+import { PostDetailInput, PostDetailOutput } from './dtos/post-detail.dto';
 import {
   SearchPostByCategoryInput,
   SearchPostByCategoryOutput,
@@ -63,6 +64,27 @@ export class PostService {
       return {
         ok: false,
         error: '게시글 생성에 실패했습니다.',
+      };
+    }
+  }
+
+  async findPostById({ postId }: PostDetailInput): Promise<PostDetailOutput> {
+    try {
+      const post = await this.posts.findOne(postId);
+      if (!post) {
+        return {
+          ok: false,
+          error: '게시물을 찾을 수 없습니다.',
+        };
+      }
+      return {
+        ok: true,
+        post,
+      };
+    } catch {
+      return {
+        ok: false,
+        error: '게시물을 불러오는데 실패했습니다.',
       };
     }
   }
