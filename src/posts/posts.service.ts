@@ -4,6 +4,10 @@ import { CONFIG_PAGES } from 'src/common/common.constants';
 import { JwtService } from 'src/jwt/jwt.service';
 import { User } from 'src/users/entities/user.entity';
 import { ILike, MoreThanOrEqual, Repository } from 'typeorm';
+import {
+  CreateCommentInput,
+  CreateCommentOutput,
+} from './dtos/create-comment.dto';
 import { CreatePostInput, CreatePostOutput } from './dtos/create-post.dto';
 import { DeletePostInput, DeletePostOutput } from './dtos/delete-post.dto';
 import { EditPostInput, EditPostOutput } from './dtos/edit-post.dto';
@@ -12,6 +16,8 @@ import {
   SearchPostByCategoryOutput,
 } from './dtos/search-post-category.dto';
 import { ToggleScrapInput, ToggleScrapOutput } from './dtos/toggle-scrap.dto';
+import { Comment } from './entities/comment.entity';
+import { Nested } from './entities/nested.entity';
 import { Post } from './entities/post.entity';
 import { Scrap } from './entities/scrap.entity';
 
@@ -20,8 +26,16 @@ export class PostService {
   constructor(
     @InjectRepository(Post)
     private readonly posts: Repository<Post>,
+
     @InjectRepository(Scrap)
     private readonly scraps: Repository<Scrap>,
+
+    @InjectRepository(Comment)
+    private readonly comments: Repository<Comment>,
+
+    @InjectRepository(Nested)
+    private readonly nesteds: Repository<Nested>,
+
     private readonly jwtService: JwtService,
   ) {}
 
@@ -208,6 +222,34 @@ export class PostService {
       return {
         ok: false,
         error: 'Toggle scrap에 실패했습니다.',
+      };
+    }
+  }
+
+  async createComment(
+    writer: User,
+    { content, postId }: CreateCommentInput,
+  ): Promise<CreateCommentOutput> {
+    try {
+      const newComment = this.comments.create({ content });
+      newComment.user = writer;
+
+      const post = await this.posts.findOne(postId);
+      if (!post) {
+        return {
+          ok: false,
+          error: '게시물이 존재하지 않습니다.',
+        };
+      }
+      newComment.post = post;
+      await this.comments.save(newComment);
+      return {
+        ok: true,
+      };
+    } catch {
+      return {
+        ok: false,
+        error: '댓글 생성에 실패했습니다.',
       };
     }
   }

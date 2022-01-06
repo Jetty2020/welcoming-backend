@@ -10,6 +10,10 @@ import {
 import { AuthUser } from 'src/auth/auth-user.decorator';
 import { Role } from 'src/auth/role.decorator';
 import { User } from 'src/users/entities/user.entity';
+import {
+  CreateCommentInput,
+  CreateCommentOutput,
+} from './dtos/create-comment.dto';
 import { CreatePostInput, CreatePostOutput } from './dtos/create-post.dto';
 import { DeletePostInput, DeletePostOutput } from './dtos/delete-post.dto';
 import { EditPostInput, EditPostOutput } from './dtos/edit-post.dto';
@@ -18,6 +22,7 @@ import {
   SearchPostByCategoryOutput,
 } from './dtos/search-post-category.dto';
 import { ToggleScrapInput, ToggleScrapOutput } from './dtos/toggle-scrap.dto';
+import { Comment } from './entities/comment.entity';
 import { Post } from './entities/post.entity';
 import { Scrap } from './entities/scrap.entity';
 import { PostService } from './posts.service';
@@ -82,5 +87,19 @@ export class ScrapResolver {
     @Args('input') toggleScrapInput: ToggleScrapInput,
   ): Promise<ToggleScrapOutput> {
     return this.postService.toggleScrap(authUser, toggleScrapInput);
+  }
+}
+
+@Resolver(() => Comment)
+export class CommentResolver {
+  constructor(private readonly postService: PostService) {}
+
+  @Mutation(() => CreateCommentOutput)
+  @Role(['Any'])
+  async createComment(
+    @AuthUser() authUser: User,
+    @Args('input') createcommentInput: CreateCommentInput,
+  ): Promise<CreateCommentOutput> {
+    return this.postService.createComment(authUser, createcommentInput);
   }
 }

@@ -5,9 +5,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Post } from './entities/post.entity';
 import { Scrap } from './entities/scrap.entity';
 import { Comment } from './entities/comment.entity';
+import { Nested } from './entities/nested.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Post, Scrap, Comment])],
+  imports: [TypeOrmModule.forFeature([Post, Scrap, Comment, Nested])],
   providers: [PostResolver, PostService, ScrapResolver, CommentResolver],
 })
 export class PostsModule {}
