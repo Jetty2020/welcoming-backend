@@ -13,6 +13,10 @@ import {
   CreateNestedOutput,
 } from './dtos/create-nested.dto';
 import { CreatePostInput, CreatePostOutput } from './dtos/create-post.dto';
+import {
+  DeleteCommentInput,
+  DeleteCommentOutput,
+} from './dtos/delete-comment.dto';
 import { DeletePostInput, DeletePostOutput } from './dtos/delete-post.dto';
 import { EditPostInput, EditPostOutput } from './dtos/edit-post.dto';
 import {
@@ -282,6 +286,41 @@ export class PostService {
       return {
         ok: false,
         error: '대댓글 생성에 실패했습니다.',
+      };
+    }
+  }
+
+  async deleteComment(
+    writer: User,
+    { commentId, nestedId }: DeleteCommentInput,
+  ): Promise<DeleteCommentOutput> {
+    if (commentId) {
+      const comment = await this.comments.findOne(commentId);
+      if (!comment) {
+        return {
+          ok: false,
+          error: '댓글이 존재하지 않습니다.',
+        };
+      }
+      await this.comments.delete(commentId);
+    } else if (nestedId) {
+      const nested = await this.nesteds.findOne(nestedId);
+      if (!nested) {
+        return {
+          ok: false,
+          error: '대댓글이 존재하지 않습니다.',
+        };
+      }
+      await this.nesteds.delete(nestedId);
+    }
+    try {
+      return {
+        ok: true,
+      };
+    } catch {
+      return {
+        ok: false,
+        error: '댓글 삭제에 실패했습니다.',
       };
     }
   }

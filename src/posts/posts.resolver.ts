@@ -19,6 +19,10 @@ import {
   CreateNestedOutput,
 } from './dtos/create-nested.dto';
 import { CreatePostInput, CreatePostOutput } from './dtos/create-post.dto';
+import {
+  DeleteCommentInput,
+  DeleteCommentOutput,
+} from './dtos/delete-comment.dto';
 import { DeletePostInput, DeletePostOutput } from './dtos/delete-post.dto';
 import { EditPostInput, EditPostOutput } from './dtos/edit-post.dto';
 import {
@@ -114,5 +118,14 @@ export class CommentResolver {
     @Args('input') createNestedInput: CreateNestedInput,
   ): Promise<CreateCommentOutput> {
     return this.postService.createNested(authUser, createNestedInput);
+  }
+
+  @Mutation(() => DeleteCommentOutput)
+  @Role(['Any'])
+  async deleteComment(
+    @AuthUser() authUser: User,
+    @Args('input') deletecommentInput: DeleteCommentInput,
+  ): Promise<DeleteCommentOutput> {
+    return this.postService.deleteComment(authUser, deletecommentInput);
   }
 }
