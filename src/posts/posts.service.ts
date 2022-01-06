@@ -8,6 +8,10 @@ import {
   CreateCommentInput,
   CreateCommentOutput,
 } from './dtos/create-comment.dto';
+import {
+  CreateNestedInput,
+  CreateNestedOutput,
+} from './dtos/create-nested.dto';
 import { CreatePostInput, CreatePostOutput } from './dtos/create-post.dto';
 import { DeletePostInput, DeletePostOutput } from './dtos/delete-post.dto';
 import { EditPostInput, EditPostOutput } from './dtos/edit-post.dto';
@@ -250,6 +254,34 @@ export class PostService {
       return {
         ok: false,
         error: '댓글 생성에 실패했습니다.',
+      };
+    }
+  }
+
+  async createNested(
+    writer: User,
+    { content, commentId }: CreateNestedInput,
+  ): Promise<CreateNestedOutput> {
+    try {
+      const newNested = this.nesteds.create({ content });
+      newNested.user = writer;
+
+      const comment = await this.comments.findOne(commentId);
+      if (!comment) {
+        return {
+          ok: false,
+          error: '댓글이 존재하지 않습니다.',
+        };
+      }
+      newNested.parent = comment;
+      await this.nesteds.save(newNested);
+      return {
+        ok: true,
+      };
+    } catch {
+      return {
+        ok: false,
+        error: '대댓글 생성에 실패했습니다.',
       };
     }
   }
