@@ -105,25 +105,25 @@ export class PostService {
             createdAt: 'DESC',
           },
         });
+      } else if (order === 1) {
+        [posts, totalResults] = await this.posts.findAndCount({
+          skip: (page - 1) * CONFIG_PAGES,
+          take: CONFIG_PAGES,
+          order: {
+            scrapsNum: 'DESC',
+            createdAt: 'DESC',
+          },
+        });
+      } else {
+        [posts, totalResults] = await this.posts.findAndCount({
+          skip: (page - 1) * CONFIG_PAGES,
+          take: CONFIG_PAGES,
+          order: {
+            commentsNum: 'DESC',
+            createdAt: 'DESC',
+          },
+        });
       }
-      console.log(posts);
-      // else if (order === 1) {
-      //   [posts, totalResults] = await this.posts.findAndCount({
-      //     skip: (page - 1) * CONFIG_PAGES,
-      //     take: CONFIG_PAGES,
-      //     order: {
-      //       scrapsNum: 'DESC',
-      //     },
-      //   });
-      // } else {
-      //   [posts, totalResults] = await this.posts.findAndCount({
-      //     skip: (page - 1) * CONFIG_PAGES,
-      //     take: CONFIG_PAGES,
-      //     order: {
-      //       createdAt: 'DESC',
-      //     },
-      //   });
-      // }
       return {
         ok: true,
         posts,
