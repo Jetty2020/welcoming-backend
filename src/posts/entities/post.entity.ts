@@ -44,6 +44,11 @@ export class Post extends CoreEntity {
   selling_price: number;
 
   @Field(() => Int)
+  @Column({ default: 0 })
+  @IsInt()
+  todayDeal: number;
+
+  @Field(() => Int)
   @Column()
   @IsInt()
   stock: number;

@@ -25,6 +25,10 @@ import {
 } from './dtos/delete-comment.dto';
 import { DeletePostInput, DeletePostOutput } from './dtos/delete-post.dto';
 import { EditPostInput, EditPostOutput } from './dtos/edit-post.dto';
+import {
+  GetTodayDealPostInput,
+  GetTodayDealPostOutput,
+} from './dtos/get-todayDeal-post.dto';
 import { PostDetailInput, PostDetailOutput } from './dtos/post-detail.dto';
 import {
   SearchPostByCategoryInput,
@@ -61,6 +65,13 @@ export class PostResolver {
     @Args('input') searchPostInput: SearchPostByCategoryInput,
   ): Promise<SearchPostByCategoryOutput> {
     return this.postService.searchPostByCategory(searchPostInput);
+  }
+
+  @Query(() => GetTodayDealPostOutput)
+  getTodayDealPost(
+    @Args('input') getTodayDealPostInput: GetTodayDealPostInput,
+  ): Promise<GetTodayDealPostOutput> {
+    return this.postService.getTodayDealPost(getTodayDealPostInput);
   }
 
   @Mutation(() => EditPostOutput)

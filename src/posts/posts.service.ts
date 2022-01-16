@@ -19,6 +19,10 @@ import {
 } from './dtos/delete-comment.dto';
 import { DeletePostInput, DeletePostOutput } from './dtos/delete-post.dto';
 import { EditPostInput, EditPostOutput } from './dtos/edit-post.dto';
+import {
+  GetTodayDealPostInput,
+  GetTodayDealPostOutput,
+} from './dtos/get-todayDeal-post.dto';
 import { PostDetailInput, PostDetailOutput } from './dtos/post-detail.dto';
 import {
   SearchPostByCategoryInput,
@@ -117,6 +121,38 @@ export class PostService {
         posts,
         totalResults,
         totalPages: Math.ceil(totalResults / CONFIG_PAGES),
+      };
+    } catch {
+      return { ok: false, error: '게시물을 검색하는데 실패했습니다.' };
+    }
+  }
+
+  async getTodayDealPost({
+    page,
+    postNum,
+  }: GetTodayDealPostInput): Promise<GetTodayDealPostOutput> {
+    try {
+      let nums = 0;
+      if (postNum) {
+        nums = postNum;
+      } else {
+        nums = CONFIG_PAGES;
+      }
+      const [posts, totalResults] = await this.posts.findAndCount({
+        where: {
+          todayDeal: MoreThanOrEqual(1),
+        },
+        skip: (page - 1) * nums,
+        take: nums,
+        order: {
+          createdAt: 'DESC',
+        },
+      });
+      return {
+        ok: true,
+        posts,
+        totalResults,
+        totalPages: Math.ceil(totalResults / nums),
       };
     } catch {
       return { ok: false, error: '게시물을 검색하는데 실패했습니다.' };
