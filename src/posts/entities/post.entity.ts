@@ -135,4 +135,9 @@ export class Post extends CoreEntity {
     eager: true,
   })
   comments: Comment[];
+
+  @Field(() => Int)
+  @Column({ default: 0 })
+  @IsInt()
+  commentsNum: number;
 }

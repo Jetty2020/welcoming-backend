@@ -337,6 +337,13 @@ export class PostService {
       newComment.user = writer;
 
       const post = await this.posts.findOne(postId);
+      const [_, commentCount] = await this.comments.findAndCount({
+        where: {
+          post,
+        },
+      });
+      post.commentsNum = commentCount + 1;
+      await this.posts.save(post);
       if (!post) {
         return {
           ok: false,
@@ -347,6 +354,7 @@ export class PostService {
       await this.comments.save(newComment);
       return {
         ok: true,
+        commentId: newComment.id,
       };
     } catch {
       return {
@@ -389,7 +397,12 @@ export class PostService {
     { commentId, nestedId }: DeleteCommentInput,
   ): Promise<DeleteCommentOutput> {
     if (commentId) {
-      const comment = await this.comments.findOne(commentId);
+      const comment = await this.comments.findOne(commentId, {
+        relations: ['post'],
+      });
+      const post = await this.posts.findOne(comment.post.id);
+      post.commentsNum -= 1;
+      await this.posts.save(post);
       if (!comment) {
         return {
           ok: false,

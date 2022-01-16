@@ -17,4 +17,7 @@ export class CreateCommentInput extends PickType(PartialType(Comment), [
 }
 
 @ObjectType()
-export class CreateCommentOutput extends CoreOutput {}
+export class CreateCommentOutput extends CoreOutput {
+  @Field(() => Number)
+  commentId?: number;
+}
