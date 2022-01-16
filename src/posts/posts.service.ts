@@ -4,6 +4,7 @@ import { CONFIG_PAGES } from 'src/common/common.constants';
 import { JwtService } from 'src/jwt/jwt.service';
 import { User } from 'src/users/entities/user.entity';
 import { ILike, MoreThanOrEqual, Repository } from 'typeorm';
+import { AllPostsInput, AllPostsOutput } from './dtos/allPosts.dto';
 import {
   CreateCommentInput,
   CreateCommentOutput,
@@ -90,6 +91,46 @@ export class PostService {
         ok: false,
         error: '게시물을 불러오는데 실패했습니다.',
       };
+    }
+  }
+
+  async getAllPosts({ order, page }: AllPostsInput): Promise<AllPostsOutput> {
+    try {
+      let posts, totalResults;
+      if (order === 0) {
+        [posts, totalResults] = await this.posts.findAndCount({
+          skip: (page - 1) * CONFIG_PAGES,
+          take: CONFIG_PAGES,
+          order: {
+            createdAt: 'DESC',
+          },
+        });
+      }
+      // else if (order === 1) {
+      //   [posts, totalResults] = await this.posts.findAndCount({
+      //     skip: (page - 1) * CONFIG_PAGES,
+      //     take: CONFIG_PAGES,
+      //     order: {
+      //       scrapsNum: 'DESC',
+      //     },
+      //   });
+      // } else {
+      //   [posts, totalResults] = await this.posts.findAndCount({
+      //     skip: (page - 1) * CONFIG_PAGES,
+      //     take: CONFIG_PAGES,
+      //     order: {
+      //       createdAt: 'DESC',
+      //     },
+      //   });
+      // }
+      return {
+        ok: true,
+        posts,
+        totalResults,
+        totalPages: Math.ceil(totalResults / CONFIG_PAGES),
+      };
+    } catch {
+      return { ok: false, error: '게시물을 검색하는데 실패했습니다.' };
     }
   }
 

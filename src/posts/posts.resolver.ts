@@ -10,6 +10,7 @@ import {
 import { AuthUser } from 'src/auth/auth-user.decorator';
 import { Role } from 'src/auth/role.decorator';
 import { User } from 'src/users/entities/user.entity';
+import { AllPostsInput, AllPostsOutput } from './dtos/allPosts.dto';
 import {
   CreateCommentInput,
   CreateCommentOutput,
@@ -58,6 +59,13 @@ export class PostResolver {
     @Args('input') postDetailInput: PostDetailInput,
   ): Promise<PostDetailOutput> {
     return this.postService.findPostById(postDetailInput);
+  }
+
+  @Query(() => AllPostsOutput)
+  getAllPosts(
+    @Args('input') allPostInput: AllPostsInput,
+  ): Promise<AllPostsOutput> {
+    return this.postService.getAllPosts(allPostInput);
   }
 
   @Query(() => SearchPostByCategoryOutput)
