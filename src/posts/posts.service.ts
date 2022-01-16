@@ -106,6 +106,7 @@ export class PostService {
           },
         });
       }
+      console.log(posts);
       // else if (order === 1) {
       //   [posts, totalResults] = await this.posts.findAndCount({
       //     skip: (page - 1) * CONFIG_PAGES,
@@ -265,20 +266,6 @@ export class PostService {
     }
   }
 
-  async getScrapsNumber(post: Post) {
-    try {
-      const [_, totalScraps] = await this.scraps.findAndCount({
-        where: {
-          post,
-        },
-      });
-      return totalScraps;
-    } catch (err) {
-      console.error(err);
-      throw err;
-    }
-  }
-
   async checkIScrap(ctx: any, post: Post) {
     try {
       let decoded;
@@ -317,11 +304,19 @@ export class PostService {
           post,
         },
       });
+      const [_, count] = await this.scraps.findAndCount({
+        where: {
+          post,
+        },
+      });
       if (scrap) {
+        post.scrapsNum = count - 1;
         await this.scraps.delete(scrap.id);
       } else {
+        post.scrapsNum = count + 1;
         await this.scraps.save(this.scraps.create({ user, post }));
       }
+      await this.posts.save(post);
       return {
         ok: true,
       };

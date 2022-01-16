@@ -112,6 +112,7 @@ export class Post extends CoreEntity {
   scraps: Scrap[];
 
   @Field(() => Int)
+  @Column({ default: 0 })
   @IsInt()
   scrapsNum: number;
 

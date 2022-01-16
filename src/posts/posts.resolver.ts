@@ -100,11 +100,6 @@ export class PostResolver {
     return this.postService.deletePost(seller, deletePostInput);
   }
 
-  @ResolveField(() => Number)
-  scrapsNum(@Parent() post: Post) {
-    return this.postService.getScrapsNumber(post);
-  }
-
   @ResolveField(() => Boolean)
   isScrap(@Context() ctx: any, @Parent() post: Post) {
     return this.postService.checkIScrap(ctx, post);
