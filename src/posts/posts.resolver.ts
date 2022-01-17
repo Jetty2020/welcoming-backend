@@ -27,6 +27,7 @@ import {
 } from './dtos/delete-comment.dto';
 import { DeletePostInput, DeletePostOutput } from './dtos/delete-post.dto';
 import { EditPostInput, EditPostOutput } from './dtos/edit-post.dto';
+import { GetEventsInput, GetEventsOutput } from './dtos/get-events.dto';
 import {
   GetTodayDealPostInput,
   GetTodayDealPostOutput,
@@ -165,5 +166,12 @@ export class EventResolver {
     @Args('input') createEventInput: CreateEventInput,
   ): Promise<CreateEventOutput> {
     return this.postService.createEvent(authUser, createEventInput);
+  }
+
+  @Query(() => GetEventsOutput)
+  getEvents(
+    @Args('input') getEventsInput: GetEventsInput,
+  ): Promise<GetEventsOutput> {
+    return this.postService.getEvents(getEventsInput);
   }
 }

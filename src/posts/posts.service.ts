@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { CONFIG_PAGES } from 'src/common/common.constants';
 import { JwtService } from 'src/jwt/jwt.service';
 import { User } from 'src/users/entities/user.entity';
-import { ILike, MoreThanOrEqual, Repository } from 'typeorm';
+import { ILike, IsNull, MoreThanOrEqual, Not, Repository } from 'typeorm';
 import { AllPostsInput, AllPostsOutput } from './dtos/allPosts.dto';
 import {
   CreateCommentInput,
@@ -21,6 +21,7 @@ import {
 } from './dtos/delete-comment.dto';
 import { DeletePostInput, DeletePostOutput } from './dtos/delete-post.dto';
 import { EditPostInput, EditPostOutput } from './dtos/edit-post.dto';
+import { GetEventsInput, GetEventsOutput } from './dtos/get-Events.dto';
 import {
   GetTodayDealPostInput,
   GetTodayDealPostOutput,
@@ -459,6 +460,38 @@ export class PostService {
         ok: false,
         error: '기획전 생성에 실패했습니다.',
       };
+    }
+  }
+
+  async getEvents({
+    page,
+    eventNum,
+  }: GetEventsInput): Promise<GetEventsOutput> {
+    try {
+      let nums = 0;
+      if (eventNum) {
+        nums = eventNum;
+      } else {
+        nums = CONFIG_PAGES;
+      }
+      const [events, totalResults] = await this.events.findAndCount({
+        where: {
+          carouselTitle: Not(IsNull()),
+        },
+        skip: (page - 1) * nums,
+        take: nums,
+        order: {
+          createdAt: 'DESC',
+        },
+      });
+      return {
+        ok: true,
+        events,
+        totalResults,
+        totalPages: Math.ceil(totalResults / nums),
+      };
+    } catch {
+      return { ok: false, error: '기획전을 검색하는데 실패했습니다.' };
     }
   }
 }
