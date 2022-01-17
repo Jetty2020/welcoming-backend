@@ -5,6 +5,7 @@ import { Cart } from 'src/orders/entities/cart.entity';
 import { User } from 'src/users/entities/user.entity';
 import { Column, Entity, ManyToOne, OneToMany, RelationId } from 'typeorm';
 import { Comment } from './comment.entity';
+import { Event } from './event.entity';
 import { Scrap } from './scrap.entity';
 
 @InputType('PostChoiceInputType', { isAbstract: true })
@@ -93,10 +94,9 @@ export class Post extends CoreEntity {
   @IsString()
   thumbnail: string;
 
-  @Field(() => Int)
-  @Column({ default: 0 })
-  @IsInt()
-  event: number;
+  @Field(() => Event)
+  @ManyToOne(() => Event, (event) => event.posts)
+  event: Event;
 
   @Field(() => User)
   @ManyToOne(() => User, (user) => user.posts, {
