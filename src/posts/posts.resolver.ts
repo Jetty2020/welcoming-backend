@@ -15,6 +15,7 @@ import {
   CreateCommentInput,
   CreateCommentOutput,
 } from './dtos/create-comment.dto';
+import { CreateEventInput, CreateEventOutput } from './dtos/create-event.dto';
 import {
   CreateNestedInput,
   CreateNestedOutput,
@@ -37,6 +38,7 @@ import {
 } from './dtos/search-post-category.dto';
 import { ToggleScrapInput, ToggleScrapOutput } from './dtos/toggle-scrap.dto';
 import { Comment } from './entities/comment.entity';
+import { Event } from './entities/event.entity';
 import { Post } from './entities/post.entity';
 import { Scrap } from './entities/scrap.entity';
 import { PostService } from './posts.service';
@@ -149,5 +151,19 @@ export class CommentResolver {
     @Args('input') deletecommentInput: DeleteCommentInput,
   ): Promise<DeleteCommentOutput> {
     return this.postService.deleteComment(authUser, deletecommentInput);
+  }
+}
+
+@Resolver(() => Event)
+export class EventResolver {
+  constructor(private readonly postService: PostService) {}
+
+  @Mutation(() => CreateEventOutput)
+  @Role(['Any'])
+  async createEvent(
+    @AuthUser() authUser: User,
+    @Args('input') createEventInput: CreateEventInput,
+  ): Promise<CreateEventOutput> {
+    return this.postService.createEvent(authUser, createEventInput);
   }
 }

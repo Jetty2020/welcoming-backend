@@ -9,6 +9,7 @@ import {
   CreateCommentInput,
   CreateCommentOutput,
 } from './dtos/create-comment.dto';
+import { CreateEventInput, CreateEventOutput } from './dtos/create-event.dto';
 import {
   CreateNestedInput,
   CreateNestedOutput,
@@ -31,6 +32,7 @@ import {
 } from './dtos/search-post-category.dto';
 import { ToggleScrapInput, ToggleScrapOutput } from './dtos/toggle-scrap.dto';
 import { Comment } from './entities/comment.entity';
+import { Event } from './entities/event.entity';
 import { Nested } from './entities/nested.entity';
 import { Post } from './entities/post.entity';
 import { Scrap } from './entities/scrap.entity';
@@ -49,6 +51,9 @@ export class PostService {
 
     @InjectRepository(Nested)
     private readonly nesteds: Repository<Nested>,
+
+    @InjectRepository(Event)
+    private readonly events: Repository<Event>,
 
     private readonly jwtService: JwtService,
   ) {}
@@ -428,6 +433,31 @@ export class PostService {
       return {
         ok: false,
         error: '댓글 삭제에 실패했습니다.',
+      };
+    }
+  }
+
+  async createEvent(
+    user: User,
+    createEventInput: CreateEventInput,
+  ): Promise<CreateEventOutput> {
+    try {
+      if (user.role !== 'Manager') {
+        return {
+          ok: false,
+          error: '기획전 생성 권한이 없습니다.',
+        };
+      }
+      const newEvent = this.events.create(createEventInput);
+      await this.events.save(newEvent);
+      return {
+        ok: true,
+        eventId: newEvent.id,
+      };
+    } catch {
+      return {
+        ok: false,
+        error: '기획전 생성에 실패했습니다.',
       };
     }
   }
