@@ -4,7 +4,6 @@ import {
   Int,
   ObjectType,
   PartialType,
-  PickType,
 } from '@nestjs/graphql';
 import { CoreOutput } from 'src/common/dtos/output.dto';
 import { Post } from '../entities/post.entity';
