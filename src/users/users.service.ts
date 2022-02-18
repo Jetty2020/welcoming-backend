@@ -10,6 +10,10 @@ import {
 } from './dtos/create-account.dto';
 import { EditProfileInput, EditProfileOutput } from './dtos/edit-profile.dto';
 import { LoginInput, LoginOutput } from './dtos/login.dto';
+import {
+  ResetPasswordInput,
+  ResetPasswordOutput,
+} from './dtos/reset-password.dto';
 import { SendEmailInput, SendEmailOutput } from './dtos/send-email.dto';
 import { UserProfileOutput } from './dtos/user-profile.dto';
 import { User } from './entities/user.entity';
@@ -137,6 +141,23 @@ export class UserService {
         return { ok: false, error: '존재하지 않는 계정입니다' };
       }
       this.mailService.sendVerificationEmail(email, code);
+      return { ok: true };
+    } catch (e) {
+      return { ok: false, error: "Couldn't create account" };
+    }
+  }
+
+  async resetPassword({
+    email,
+    password,
+  }: ResetPasswordInput): Promise<ResetPasswordOutput> {
+    try {
+      const user = await this.users.findOne({ email });
+      if (!user) {
+        return { ok: false, error: '존재하지 않는 계정입니다' };
+      }
+      user.password = password;
+      await this.users.save(user);
       return { ok: true };
     } catch (e) {
       return { ok: false, error: "Couldn't create account" };

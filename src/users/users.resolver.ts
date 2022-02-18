@@ -14,6 +14,10 @@ import {
 } from './dtos/create-account.dto';
 import { EditProfileInput, EditProfileOutput } from './dtos/edit-profile.dto';
 import { LoginInput, LoginOutput } from './dtos/login.dto';
+import {
+  ResetPasswordInput,
+  ResetPasswordOutput,
+} from './dtos/reset-password.dto';
 import { SendEmailInput, SendEmailOutput } from './dtos/send-email.dto';
 import { User } from './entities/user.entity';
 import { UserService } from './users.service';
@@ -59,5 +63,12 @@ export class UserResolver {
     @Args('input') sendEmailInput: SendEmailInput,
   ): Promise<SendEmailOutput> {
     return this.usersService.sendEmail(sendEmailInput);
+  }
+
+  @Mutation(() => ResetPasswordOutput)
+  resetPassword(
+    @Args('input') resetPasswordInput: ResetPasswordInput,
+  ): Promise<ResetPasswordOutput> {
+    return this.usersService.resetPassword(resetPasswordInput);
   }
 }
