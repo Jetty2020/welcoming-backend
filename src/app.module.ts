@@ -18,6 +18,7 @@ import { UploadsModule } from './upload/uploads.module';
 import { Comment } from './posts/entities/comment.entity';
 import { Nested } from './posts/entities/nested.entity';
 import { Event } from './posts/entities/event.entity';
+import { MailModule } from './mail/mail.module';
 
 @Module({
   imports: [
@@ -35,6 +36,8 @@ import { Event } from './posts/entities/event.entity';
         PRIVATE_KEY: Joi.string().required(),
         AWS_KEY: Joi.string().required(),
         AWS_SECRET: Joi.string().required(),
+        GMAIL_ID: Joi.string().required(),
+        GMAIL_PW: Joi.string().required(),
       }),
     }),
     TypeOrmModule.forRoot({
@@ -54,6 +57,10 @@ import { Event } from './posts/entities/event.entity';
     }),
     JwtModule.forRoot({
       privateKey: process.env.PRIVATE_KEY,
+    }),
+    MailModule.forRoot({
+      gmailId: process.env.GMAIL_ID,
+      gmailPW: process.env.GMAIL_PW,
     }),
     AuthModule,
     UsersModule,
