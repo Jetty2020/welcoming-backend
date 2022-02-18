@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { JwtService } from 'src/jwt/jwt.service';
+import { MailService } from 'src/mail/mail.service';
 import { Cart } from 'src/orders/entities/cart.entity';
 import { Repository } from 'typeorm';
 import {
@@ -9,6 +10,7 @@ import {
 } from './dtos/create-account.dto';
 import { EditProfileInput, EditProfileOutput } from './dtos/edit-profile.dto';
 import { LoginInput, LoginOutput } from './dtos/login.dto';
+import { SendEmailInput, SendEmailOutput } from './dtos/send-email.dto';
 import { UserProfileOutput } from './dtos/user-profile.dto';
 import { User } from './entities/user.entity';
 
@@ -22,6 +24,8 @@ export class UserService {
     private readonly carts: Repository<Cart>,
 
     private readonly jwtService: JwtService,
+
+    private readonly mailService: MailService,
   ) {}
 
   async createAccount({
@@ -123,6 +127,19 @@ export class UserService {
     } catch (err) {
       console.error(err);
       throw err;
+    }
+  }
+
+  async sendEmail({ code, email }: SendEmailInput): Promise<SendEmailOutput> {
+    try {
+      const exists = await this.users.findOne({ email });
+      if (!exists) {
+        return { ok: false, error: '존재하지 않는 계정입니다' };
+      }
+      this.mailService.sendVerificationEmail(email, code);
+      return { ok: true };
+    } catch (e) {
+      return { ok: false, error: "Couldn't create account" };
     }
   }
 }

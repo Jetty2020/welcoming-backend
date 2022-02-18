@@ -8,7 +8,7 @@ export class MailService {
   constructor(
     @Inject(CONFIG_OPTIONS) private readonly options: MailModuleOptions,
   ) {}
-  async sendVerificationEmail(email: string, code: string): Promise<boolean> {
+  async sendVerificationEmail(email: string, code: number): Promise<boolean> {
     const emailSender = nodemailer.createTransport({
       service: 'Gmail',
       port: 587,

@@ -14,6 +14,7 @@ import {
 } from './dtos/create-account.dto';
 import { EditProfileInput, EditProfileOutput } from './dtos/edit-profile.dto';
 import { LoginInput, LoginOutput } from './dtos/login.dto';
+import { SendEmailInput, SendEmailOutput } from './dtos/send-email.dto';
 import { User } from './entities/user.entity';
 import { UserService } from './users.service';
 
@@ -51,5 +52,12 @@ export class UserResolver {
   @ResolveField(() => Number)
   async cartsNum(@Parent() user: User) {
     return this.usersService.getCartsNumber(user);
+  }
+
+  @Mutation(() => SendEmailOutput)
+  sendEmail(
+    @Args('input') sendEmailInput: SendEmailInput,
+  ): Promise<SendEmailOutput> {
+    return this.usersService.sendEmail(sendEmailInput);
   }
 }
