@@ -21,7 +21,7 @@ import {
 } from './dtos/delete-comment.dto';
 import { DeletePostInput, DeletePostOutput } from './dtos/delete-post.dto';
 import { EditPostInput, EditPostOutput } from './dtos/edit-post.dto';
-import { GetEventsInput, GetEventsOutput } from './dtos/get-Events.dto';
+import { GetEventsInput, GetEventsOutput } from './dtos/get-events.dto';
 import {
   GetTodayDealPostInput,
   GetTodayDealPostOutput,
