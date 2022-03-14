@@ -20,6 +20,7 @@ import { Nested } from './posts/entities/nested.entity';
 import { Event } from './posts/entities/event.entity';
 import { MailModule } from './mail/mail.module';
 
+console.log(process.env);
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -51,8 +52,8 @@ import { MailModule } from './mail/mail.module';
             password: process.env.DB_PASSWORD,
             database: process.env.DB_NAME,
           }),
-      synchronize: process.env.NODE_ENV !== 'production',
-      logging: process.env.NODE_ENV !== 'production',
+      synchronize: process.env.NODE_ENV !== 'prod',
+      logging: process.env.NODE_ENV !== 'prod',
       entities: [User, Post, Scrap, Cart, Order, Comment, Nested, Event],
     }),
     GraphQLModule.forRoot({

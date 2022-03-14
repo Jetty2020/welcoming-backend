@@ -52,6 +52,7 @@ export class UserService {
       );
       return { ok: true };
     } catch (e) {
+      console.log(e);
       return { ok: false, error: '계정을 만들 수 없습니다.' };
     }
   }
@@ -82,6 +83,7 @@ export class UserService {
         token,
       };
     } catch (error) {
+      console.log(error);
       return {
         ok: false,
         error: '로그인에 실패했습니다.',
@@ -97,6 +99,7 @@ export class UserService {
         user,
       };
     } catch (error) {
+      console.log(error);
       return { ok: false, error: 'User Not Found' };
     }
   }
@@ -115,6 +118,7 @@ export class UserService {
         ok: true,
       };
     } catch (error) {
+      console.log(error);
       return { ok: false, error: '프로필 수정에 실패했습니다.' };
     }
   }
@@ -160,6 +164,7 @@ export class UserService {
       await this.users.save(user);
       return { ok: true };
     } catch (e) {
+      console.log(e);
       return { ok: false, error: "Couldn't create account" };
     }
   }
