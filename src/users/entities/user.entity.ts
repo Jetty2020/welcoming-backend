@@ -35,7 +35,7 @@ export class User extends CoreEntity {
   @Column({ unique: true })
   @Field(() => String)
   @IsString()
-  @Length(4, 13)
+  @Length(2, 15)
   nickname: string;
 
   @Column({ select: false })
